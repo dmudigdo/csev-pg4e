@@ -350,7 +350,7 @@ The link simply opens a larger version of the image in a new window."
  style="border: 2px solid black; width: 100%;">
 </a></div>
 <p>
-To take advantage of the "naruralness" of natural language, we need to ignore words that convey no meaning
+To take advantage of the "naturalness" of natural language, we need to ignore words that convey no meaning
 and consistently reduce variations of words with equivalent meanings down to a single "stem word".
 </p>
 <p>
