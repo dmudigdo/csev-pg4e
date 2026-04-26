@@ -47,7 +47,7 @@ In this lecture we will explore how PostgreSQL indexes work and how we build ind
 for large text fields that contain natural language
 and how we can look into those fields and use indexes to search large text fields efficiently.
 </p>
-<p><b>Additional Materials</b>
+<p><b>Additional Materials</b></p>
 <ul>
 <li><a href="05-FullText.pptx">PowerPoint slides of the diagrams</a></li>
 <li><a href="05-FullText.sql" target="_blank">Sample SQL commands for this lecture</a></li>
@@ -58,7 +58,7 @@ https://www.pg4e.com/lectures/05-FullText</a></li>
 <?php doNav('data-layout'); ?>
 </h2>
 <p>
-Rows can vary quite a bit in terms of length.
+Rows can vary quite a bit in terms of length.</p>
 <pre>
 CREATE TABLE messages
  (id SERIAL,              -- 4 bytes
@@ -85,30 +85,24 @@ is free space.
 The link simply opens a larger version of the image in a new window."
 style="border: 2px solid black; width: 100%;">
 </a></div>
-<p>
-PostgreSQL Organizes Rows into Blocks
+<p>PostgreSQL Organizes Rows into Blocks</p>
 <ul>
     <li>We read an entire block into memory (i.e. not just one row)</li>
     <li>Easy to compute the start of a block within a file for random access</li>
     <li>There are the unit of caching in memory</li>
     <li>They are (often) the unit of locking when we think we are locking a row</li>
 </ul>
-</p>
-<p>
-What is the Best Block Size?
+<p>What is the Best Block Size?</p>
 <ul>
     <li>Blocks that are small waste free space / fragmentation</li>
     <li>Large blocks take more memory in cache be cached for a given memory size</li>
     <li>Large blocks longer to read and write to/from SSD </li>
 </ul>
-</p>
-<p>
-If we have a table that contains 1GB (125,000 blocks) of data, a sequential scan from a
+<p>If we have a table that contains 1GB (125,000 blocks) of data, a sequential scan from a
 fast SSD takes about 2 seconds while with careful optimization, reading a random block
 can be fast as 1/50000th of a second.  Some SSD drives can read as many as 32 different
 random blocks in a single read request.  If the block is already cached in memory it is even
-faster.  Sequential scans are very bad.
-</p>
+faster.  Sequential scans are very bad.</p>
 
 <b>References</b>
 <ul>
@@ -132,7 +126,7 @@ faster.  Sequential scans are very bad.
 </h2>
 <p>
 Assume each row in the <b>users</b> table is about 1K, we could save a lot of time if somehow we had a hint
-about which row was in which block.
+about which row was in which block.</p>
 <pre>
 email              | block
 -------------------+------
@@ -144,13 +138,13 @@ SELECT name FROM users WHERE email='csev@umich.edu';
 SELECT name FROM users WHERE email='colleen@umich.edu';
 SELECT name FROM users WHERE email='anthony@umich.edu';
 </pre>
-Our index would be about 30 bytes per row which is much smaller than the actual row data.  We store index data in 8K
+<p>Our index would be about 30 bytes per row which is much smaller than the actual row data.  We store index data in 8K
 blocks as well - as indexes grow in size we need to find was to avoid reading the entire index to look up one key.
 We need an index to the index.  For string logical keys, a B-Tree index is a good, general solution.
 B-Trees keep the keys in sorted order by reorganizing the tree as keys are inserted.
 </p>
 <p>
-PostgreSQL Index Types
+PostgreSQL Index Types</p>
 <ul>
     <li>B-Tree - The default for many applications - automatically balanced as it grows</li>
     <li>BRIN - Block Range Index - Smaller / faster if data is mostly sorted</li>
@@ -159,7 +153,6 @@ PostgreSQL Index Types
     <li>GiST - Generalized Search Tree</li>
     <li>SP-GiST - Space Partitioned Generalized Search Tree</li>
 </ul>
-</p>
 <b>References</b>
 <ul>
     <li><a href="http://www.postgresqltutorial.com/postgresql-indexes/postgresql-index-types/" target="_blank">
@@ -177,17 +170,17 @@ PostgreSQL Index Types
 <?php doNav('index-types'); ?>
 </h2>
 <p>
-It is not a perfect metaphor but in general there are two categories of indexes:
+It is not a perfect metaphor but in general there are two categories of indexes:</p>
 <ul>
     <li><b>Forward indexes</b> - You give the index a logical key and it tells you where to find the row
         that contains the key. (B-Tree, BRIN, Hash)</li>
     <li><b>Inverse indexes</b> - You give the index a string (query) and the index gives you a list of <i>all</i>
         the rows that match the query. (GIN, GiST)</li>
 </ul>
-The metaphor is not perfect - because B-tree indexes are stored in sorted order, if you give
+<p>The metaphor is not perfect - because B-tree indexes are stored in sorted order, if you give
 a B-Tree the prefix of a logical key, it can give you a set of rows...
-</p><p>
-The most typical use case for an <b>inverse index</b> is to quickly search text documents wit one or a few words.
+</p>
+<p>The most typical use case for an <b>inverse index</b> is to quickly search text documents wit one or a few words.
 </p>
 <b>References</b>
 <ul>
@@ -223,7 +216,7 @@ style="border: 2px solid black; width: 100%;">
 </a></div>
 <p>We can split long text columns into space-delimited words using PostgreSQL's split-like function
 called <b>string_to_array()</b>.  And then we can use the PostgresSQL <b>unnest()</b> function to turn
-the resulting array into separate rows.
+the resulting array into separate rows.</p>
 <pre>
 pg4e=&gt; string_to_array('Hello world', ' ');
  string_to_array
@@ -236,7 +229,7 @@ pg4e=&gt; unnest(string_to_array('Hello world', ' '));
  Hello
  world
 </pre>
-After that, it is just a few <b>SELECT DISTINCT</b> statements and we can create and use an inverted index.
+<p>After that, it is just a few <b>SELECT DISTINCT</b> statements and we can create and use an inverted index.</p>
 <pre>
 CREATE TABLE docs (id SERIAL, doc TEXT, PRIMARY KEY(id));
 INSERT INTO docs (doc) VALUES
@@ -289,12 +282,11 @@ pg4e=&gt; select * from docs_gin;
     <li>Generalized Inverse Index (GIN)</li>
     <li>Generalized Search Tree (GiST)</li>
 </ul>
-<p>
-<i>GIN indexes are the preferred text search index type. </i>
+<p><i>GIN indexes are the preferred text search index type. </i>
 Advantages: exact matches, efficient on lookup/search.  Disadvantages: can be costly when inserting or updating data
 because every new word is inserted somewhere in the index and can get large.
 Like the B-Tree, the GIN is the usual "go-to" inverted index and GiST is used in more special cases.
-The previous example was a rough approximation of a GIN index.
+The previous example was a rough approximation of a GIN index.</p>
 <p>
 Hashing is used to reduce the size of and cost to update the GiST.
 <i>
@@ -309,8 +301,7 @@ and the kinds of operations that we will be using in <b>WHERE</b> clauses.  In t
 below we are indexing arrays of strings (i.e. text[]) and will be using the "&lt;@" operator
 (contained within).
 </p>
-<p>
-We can build a simple GIN index like the manual index above:
+<p>We can build a simple GIN index like the manual index above:</p>
 <pre>
 CREATE TABLE docs (id SERIAL, doc TEXT, PRIMARY KEY(id));
 
@@ -322,7 +313,7 @@ INSERT INTO docs (doc) VALUES
 ('UMSI also teaches Python and also SQL');
 
 </pre>
-The &lt;@ is looking for an intersection between two arrays
+<p>The &lt;@ is looking for an intersection between two arrays</p>
 <pre>
 SELECT id, doc FROM docs WHERE '{learn}' &lt;@ string_to_array(doc, ' ');
 
@@ -363,7 +354,7 @@ To take advantage of the "naruralness" of natural language, we need to ignore wo
 and consistently reduce variations of words with equivalent meanings down to a single "stem word".
 </p>
 <p>
-Recall this failure
+Recall this failure</p>
 <pre>
 SELECT DISTINCT id, doc FROM docs AS D
 JOIN docs_gin AS G ON D.id = G.doc_id
@@ -374,12 +365,12 @@ WHERE G.keyword = ANY(string_to_array('Search for Lemons and Neons', ' '));
   1 | This is SQL and Python and other fun teaching stuff
   3 | UMSI also teaches Python and also SQL
 </pre>
-The word "and" contributed no real meaning to our query.  And it took up valuable space in our GIN
+<p>The word "and" contributed no real meaning to our query.  And it took up valuable space in our GIN
 index. So we put it on the
 <a href="https://en.wikipedia.org/wiki/Stop_words" target="_blank">stop word</a> list.
 Lets implement stop word and
 <a href="https://en.wikipedia.org/wiki/Stemming" target="_blank">stemming</a> capabilities
-by hand and then just use PostgreSQL features to build a natural language search.
+by hand and then just use PostgreSQL features to build a natural language search.</p>
 <pre>
 SELECT * FROM stop_words;
  word
@@ -422,10 +413,9 @@ SELECT * FROM docs_gin;
 (19 rows)
 </pre>
 
-<p>
-Stemming and stop words (and the meaning of "meaning") depend on which language is stored in the text column.
+<p>Stemming and stop words (and the meaning of "meaning") depend on which language is stored in the text column.
 The default install of PostgreSQL knows the rules for
-a few languages and more can be installed:
+a few languages and more can be installed:<p>
 <pre>
 SELECT cfgname FROM pg_ts_config;
 
@@ -461,7 +451,7 @@ language-oriented features.
 <b>ts_vector()</b> returns a list of words that represent the document.
 <b>ts_query()</b> returns a list of words with operators to representaions various logical combinations of words
         much like
-        <a href="https://www.google.com/advanced_search" target="_blank">Google's Advanced Search</a>.
+        <a href="https://www.google.com/advanced_search" target="_blank">Google's Advanced Search</a>.</p>
 <pre>
 SELECT to_tsvector('english', 'UMSI also teaches Python and also SQL');
 
@@ -475,12 +465,10 @@ SELECT to_tsquery('english', 'teaching');
 ------------
  'teach'
 </pre>
-</p>
-<p>
-In a <b>WHERE</b> clause we use the
+<p>In a <b>WHERE</b> clause we use the
 <b>@@</b> operator to ask is a <b>ts_query</b> matches a <b>ts_vector</b>.
-</p><p>
-    <pre>
+</p>
+<pre>
 SELECT to_tsquery('english', 'teaching') @@
   to_tsvector('english', 'UMSI also teaches Python and also SQL');
 
@@ -488,7 +476,7 @@ SELECT to_tsquery('english', 'teaching') @@
 ----------
  t
 </pre>
-</p>
+
 <b>References</b>
 <ul>
     <li><a href="https://www.postgresql.org/docs/11/textsearch-intro.html" target="_blank">
@@ -499,11 +487,10 @@ SELECT to_tsquery('english', 'teaching') @@
 <h2 id="natural">Making a Natural Language Inverted Index with PostgreSQL
 <?php doNav('natural'); ?>
 </h2>
-<p>
-As you might expect, letting PostgreSQL do all the work is the easy part.
+<p>As you might expect, letting PostgreSQL do all the work is the easy part.
 Stop words and stems are all handled in the "ts_" functions.  And the
 GIN knows what operations you will be using automatically when you
-pass in a <b>ts_vector</b>.
+pass in a <b>ts_vector</b>.</p>
 <pre>
 CREATE TABLE docs (id SERIAL, doc TEXT, PRIMARY KEY(id));
 
@@ -532,7 +519,6 @@ EXPLAIN SELECT id, doc FROM docs WHERE
          Index Cond: ('''learn'''::tsquery @@ to_tsvector('english'::regconfig, doc))
 </pre>
 
-
 <p><b>References</b></p>
 
 <ul>
@@ -550,7 +536,7 @@ EXPLAIN SELECT id, doc FROM docs WHERE
 <p>
 You can ask PostgreSQL the different index / <b>WHERE</b> clause operator combinations
 it supports.  There are quite a few and they can change from one PostgreSQL version
-to another.
+to another.</p>
 <pre>
 SELECT am.amname AS index_method, opc.opcname AS opclass_name
     FROM pg_am am, pg_opclass opc
