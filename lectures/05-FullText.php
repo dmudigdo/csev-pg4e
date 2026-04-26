@@ -76,8 +76,8 @@ We arrange the file into blocks (default 8K) and pack the rows into blocks leavi
 to make inserts updates, or deletes possible without needing to rewrite a large file to move
 things up or down.
 </p>
-<div style="float: right; width: 50%; min-width: 250px;"><a href="05-FullText-images/postgres-disk-blocks.png" target="_blank">
-<img src="05-FullText-images/postgres-disk-blocks.png" 
+<div style="float: right; width: 50%; min-width: 250px;"><a href="http://pg4e.com/lectures/05-FullText-images/postgres-disk-blocks.png" target="_blank">
+<img src="http://pg4e.com/lectures/05-FullText-images/postgres-disk-blocks.png" 
 alt="A picture of an 8K PostgreSQL disk block allocation.  The beginning of the block is a set of 
 short pointers that indicate the starting poing (offset) of each of the rows in the block.
 Rows are inserted from the end of the block and the middle space between the rows and offsets
@@ -207,8 +207,8 @@ a B-Tree the prefix of a logical key, it can give you a set of rows...
 <h2 id="invert-sql">Inverted Indexes - Using only SQL
 <?php doNav('invert-sql'); ?>
 </h2>
-<div style="float: right; width: 25%; min-width: 250px;"><a href="05-FullText-images/inverted-index.png" target="_blank">
-<img src="05-FullText-images/inverted-index.png" 
+<div style="float: right; width: 25%; min-width: 250px;"><a href="http://pg4e.com/lectures/05-FullText-images/inverted-index.png" target="_blank">
+<img src="http://pg4e.com/lectures/05-FullText-images/inverted-index.png" 
 alt="This shows three documents with ids of 1, 2, and 3 and an inverted index with columns labelled 'keyword' and 'doc_id'.
 All the items in this image are in the code samples below.
 The link simply opens a larger version of the image in a new window."
@@ -342,8 +342,8 @@ EXPLAIN SELECT id, doc FROM docs WHERE '{learn}' &lt;@ string_to_array(doc, ' ')
 <h2 id="stemming">Inverted Indexes of Natural Language - Stemming and Stop Words
 <?php doNav('stemming'); ?>
 </h2>
-<div style="float: right; width: 25%; min-width: 250px;"><a href="05-FullText-images/inverted-index-stop.png" target="_blank">
-<img src="05-FullText-images/inverted-index-stop.png"
+<div style="float: right; width: 25%; min-width: 250px;"><a href="http://pg4e.com/lectures/05-FullText-images/inverted-index-stop.png" target="_blank">
+<img src="http://pg4e.com/lectures/05-FullText-images/inverted-index-stop.png"
 alt="This shows three documents with ids of 1, 2, and 3, a stop word table and an inverted index with columns labelled 'keyword' and 'doc_id'.
 All the items in this image are in the code samples below.
 The link simply opens a larger version of the image in a new window."
