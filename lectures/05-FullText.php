@@ -10,6 +10,7 @@ body {
     text-decoration: none;
 }
 </style>
+<link rel="stylesheet" href="pg4e-notes.css">
 <?php
 $sections = array(
 "data-layout",
