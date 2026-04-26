@@ -75,7 +75,7 @@ We arrange the file into blocks (default 8K) and pack the rows into blocks leavi
 to make inserts updates, or deletes possible without needing to rewrite a large file to move
 things up or down.
 </p>
-<div style="float: right; width: 50%; min-width: 250;"><a href="05-FullText-images/postgres-disk-blocks.png" target="_blank">
+<div style="float: right; width: 50%; min-width: 250px;"><a href="05-FullText-images/postgres-disk-blocks.png" target="_blank">
 <img src="05-FullText-images/postgres-disk-blocks.png" 
 alt="A picture of an 8K PostgreSQL disk block allocation.  The beginning of the block is a set of 
 short pointers that indicate the starting poing (offset) of each of the rows in the block.
@@ -100,6 +100,7 @@ What is the Best Block Size?
     <li>Large blocks take more memory in cache be cached for a given memory size</li>
     <li>Large blocks longer to read and write to/from SSD </li>
 </ul>
+</p>
 <p>
 If we have a table that contains 1GB (125,000 blocks) of data, a sequential scan from a
 fast SSD takes about 2 seconds while with careful optimization, reading a random block
@@ -124,7 +125,7 @@ faster.  Sequential scans are very bad.
         </a> (Blog Post)
     </li>
 </ul>
-<br clear="all"/>
+<br clear="all">
 <h2 id="indexes">Indexes
 <?php doNav('indexes'); ?>
 </h2>
@@ -203,7 +204,7 @@ The most typical use case for an <b>inverse index</b> is to quickly search text 
 </ul>
 <b>References</b>
 <ul>
-    <li><a href="https://youtu.be/6x0cAzQ7PVs?t=559" traget="_blank">
+    <li><a href="https://youtu.be/6x0cAzQ7PVs?t=559" target="_blank">
             Google I/O '08 Keynote by Marissa Mayer</a></li>
     <li><a href="https://www.youtube.com/watch?v=BNHR6IQJGZs" target="_blank">
             How Search Works - Matt Cutts</a></li>
@@ -212,7 +213,7 @@ The most typical use case for an <b>inverse index</b> is to quickly search text 
 <h2 id="invert-sql">Inverted Indexes - Using only SQL
 <?php doNav('invert-sql'); ?>
 </h2>
-<div style="float: right; width: 25%; min-width: 250;"><a href="05-FullText-images/inverted-index.png" target="_blank">
+<div style="float: right; width: 25%; min-width: 250px;"><a href="05-FullText-images/inverted-index.png" target="_blank">
 <img src="05-FullText-images/inverted-index.png" 
 alt="This shows three documents with ids of 1, 2, and 3 and an inverted index with columns labelled 'keyword' and 'doc_id'.
 All the items in this image are in the code samples below.
@@ -279,7 +280,7 @@ pg4e=&gt; select * from docs_gin;
             target="_blank">Split column into multiple rows in Postgres</a> (Stackoverflow)</li>
 </ul>
 
-<br clear="all"/>
+<br clear="all">
 <h2 id="inverted">Inverted Indexes in PostgreSQL
 <?php doNav('inverted'); ?>
 </h2>
@@ -320,7 +321,7 @@ INSERT INTO docs (doc) VALUES
 ('UMSI also teaches Python and also SQL');
 
 </pre>
-The &lt@ is looking for an intersection between two arrays
+The &lt;@ is looking for an intersection between two arrays
 <pre>
 SELECT id, doc FROM docs WHERE '{learn}' &lt;@ string_to_array(doc, ' ');
 
@@ -328,14 +329,14 @@ SELECT id, doc FROM docs WHERE '{learn}' &lt;@ string_to_array(doc, ' ');
 ----+----------------------------------------
   2 | More people should learn SQL from UMSI
 
-EXPLAIN SELECT id, doc FROM docs WHERE '{learn}' &lt@ string_to_array(doc, ' ');
+EXPLAIN SELECT id, doc FROM docs WHERE '{learn}' &lt;@ string_to_array(doc, ' ');
 
                                  QUERY PLAN
 ----------------------------------------------------------------------------
  Bitmap Heap Scan on docs  (cost=12.05..21.53 rows=6 width=32)
-   Recheck Cond: ('{learn}'::text[] &lt@ string_to_array(doc, ' '::text))
+   Recheck Cond: ('{learn}'::text[] &lt;@ string_to_array(doc, ' '::text))
    -&gt;  Bitmap Index Scan on gin1  (cost=0.00..12.05 rows=6 width=0)
-         Index Cond: ('{learn}'::text[] &lt@ string_to_array(doc, ' '::text))
+         Index Cond: ('{learn}'::text[] &lt;@ string_to_array(doc, ' '::text))
 
 </pre>
 
@@ -345,11 +346,11 @@ EXPLAIN SELECT id, doc FROM docs WHERE '{learn}' &lt@ string_to_array(doc, ' ');
     <li><a href="https://www.postgresql.org/docs/11/textsearch-indexes.html" target="_blank">
             GIN and Gist Indexes in PostgreSQL</a></li>
 </ul>
-<br clear="all"/>
+<br clear="all">
 <h2 id="stemming">Inverted Indexes of Natural Language - Stemming and Stop Words
 <?php doNav('stemming'); ?>
 </h2>
-<div style="float: right; width: 25%; min-width: 250;"><a href="05-FullText-images/inverted-index-stop.png" target="_blank">
+<div style="float: right; width: 25%; min-width: 250px;"><a href="05-FullText-images/inverted-index-stop.png" target="_blank">
 <img src="05-FullText-images/inverted-index-stop.png"
 alt="This shows three documents with ids of 1, 2, and 3, a stop word table and an inverted index with columns labelled 'keyword' and 'doc_id'.
 All the items in this image are in the code samples below.
@@ -592,7 +593,7 @@ SELECT am.amname AS index_method, opc.opcname AS opclass_name
 (134 rows)
 </pre>
 <footer style="margin-top: 50px;">
-<hr/>
+<hr>
 <p>
 Copyright 
 <a href="https://www.dr-chuck.com/" target="_blank">
